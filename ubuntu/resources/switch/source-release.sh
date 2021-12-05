@@ -49,7 +49,7 @@ cd /usr/src
 git clone https://github.com/freeswitch/sofia-sip.git
 cd sofia-sip
 ./bootstrap.sh
-./configure
+./configure --prefix=/usr
 make
 make install
 
