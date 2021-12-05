@@ -15,7 +15,7 @@ apt install -y autoconf automake devscripts g++ git-core libncurses5-dev libtool
   liblua5.2-dev libtiff5-dev libperl-dev libcurl4-openssl-dev libsqlite3-dev libpcre3-dev \
   devscripts libspeexdsp-dev libspeex-dev libldns-dev libedit-dev libopus-dev libmemcached-dev \
   libshout3-dev libmpg123-dev libmp3lame-dev yasm nasm libsndfile1-dev libuv1-dev libvpx-dev \
-  libavformat-dev libswscale-dev libspandsp-dev
+  libavformat-dev libswscale-dev libspandsp-dev uuid-dev
 
 # additional dependencies
 apt install -y swig3.0 unzip sox wget
@@ -36,6 +36,23 @@ wget http://files.freeswitch.org/freeswitch-releases/freeswitch-$switch_version.
 unzip freeswitch-$switch_version.-release.zip
 rm -R freeswitch
 mv freeswitch-$switch_version.-release freeswitch
+
+cd /usr/src
+git clone https://github.com/freeswitch/spandsp.git
+cd spandsp
+./bootstrap.sh
+./configure
+make
+make install
+
+cd /usr/src
+git clone https://github.com/freeswitch/sofia-sip.git
+cd sofia-sip
+./bootstrap
+./configure
+make
+make install
+
 cd /usr/src/freeswitch
 
 # bootstrap is needed if using git
@@ -52,6 +69,8 @@ sed -i /usr/src/freeswitch/modules.conf -e s:'#formats/mod_pgsql:formats/mod_pgs
 
 #disable module or install dependency libks to compile signalwire
 sed -i /usr/src/freeswitch/modules.conf -e s:'applications/mod_signalwire:#applications/mod_signalwire:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'endpoints/mod_verto:#endpoints/mod_verto:'
+sed -i /usr/src/freeswitch/modules.conf -e s:'endpoints/mod_skinny:#endpoints/mod_skinny:'
 
 # prepare the build
 #./configure --prefix=/usr/local/freeswitch --enable-core-pgsql-support --disable-fhs
