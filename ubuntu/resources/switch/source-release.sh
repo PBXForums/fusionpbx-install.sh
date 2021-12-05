@@ -37,22 +37,6 @@ unzip freeswitch-$switch_version.-release.zip
 rm -R freeswitch
 mv freeswitch-$switch_version.-release freeswitch
 
-cd /usr/src
-git clone https://github.com/freeswitch/spandsp.git
-cd spandsp
-./bootstrap.sh
-./configure -prefix=/usr --libdir=/usr/lib/aarch64-linux-gnu
-make
-make install
-
-cd /usr/src
-git clone https://github.com/freeswitch/sofia-sip.git
-cd sofia-sip
-./bootstrap.sh
-./configure -prefix=/usr --libdir=/usr/lib/aarch64-linux-gnu
-make
-make install
-
 cd /usr/src/freeswitch
 
 # bootstrap is needed if using git
