@@ -41,7 +41,7 @@ cd /usr/src
 git clone https://github.com/freeswitch/spandsp.git
 cd spandsp
 ./bootstrap.sh
-./configure
+./configure --prefix=/usr
 make
 make install
 
