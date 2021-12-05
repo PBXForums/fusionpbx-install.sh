@@ -18,7 +18,7 @@ if [ ."$cpu_architecture" = ."arm" ]; then
 	if [ ."$os_codename" = ."stretch" ]; then
 	      php_version=7.2
 	else
-	      php_version=5.6
+	      php_version=7.4
 	fi
 fi
 
