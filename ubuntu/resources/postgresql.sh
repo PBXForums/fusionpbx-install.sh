@@ -45,6 +45,10 @@ make install
 
 pg_createcluster -d /var/lib/postgresql/9.4/main 9.4 main
 
+cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/private/ssl-cert-snakeoil-postgres.key
+chown postgres:postgres /etc/ssl/private/ssl-cert-snakeoil-postgres.key
+chmod 600 /etc/ssl/private/ssl-cert-snakeoil-postgres.key
+
 cp "$(dirname $0)/source/postgresql.service" /usr//lib/systemd/system/postgresql.service
 cp "$(dirname $0)/source/postgresql@.service" /usr/lib/systemd/system/postgresql@.service
 
