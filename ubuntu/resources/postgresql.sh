@@ -17,11 +17,6 @@ password=$(dd if=/dev/urandom bs=1 count=20 2>/dev/null | base64)
 #install message
 echo "Install PostgreSQL and create the database and users\n"
 
-#included in the distribution
-if [ ."$database_repo" = ."system" ]; then
-	apt-get install -y sudo postgresql
-fi
-
 #postgres official repository
 
 echo "deb http://apt.postgresql.org/pub/repos/apt/ $os_codename-pgdg main" > /etc/apt/sources.list.d/postgresql.list
