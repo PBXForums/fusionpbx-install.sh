@@ -50,6 +50,15 @@ make install
 
 pg_createcluster -d /var/lib/postgresql/9.4/main 9.4 main
 
+cp "$(dirname $0)/source/postgresql.service" /usr//lib/systemd/system/postgresql.service
+cp "$(dirname $0)/source/postgresql@.service" /usr/lib/systemd/system/postgresql@.service
+
+systemctl daemon-reload
+
+systemctl enable postgresql.service
+systemctl enable postgresql@9.4-main.service
+
+
 #add additional dependencies
 apt install -y libpq-dev
 
