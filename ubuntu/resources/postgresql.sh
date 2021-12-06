@@ -23,7 +23,7 @@ echo "deb http://apt.postgresql.org/pub/repos/apt/ $os_codename-pgdg main" > /et
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 apt-get update && apt-get upgrade -y
 #apt-get install -y sudo postgresql-12
-apt-get install -y sudo postgresql-client-12 bison flex
+apt-get install -y sudo postgresql-client-12 bison flex libreadline-dev
 
 cd /usr/src
 git clone -b bdr-pg/REL9_4_STABLE https://github.com/2ndQuadrant/bdr.git
