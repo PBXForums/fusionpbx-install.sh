@@ -35,6 +35,8 @@ cd contrib
 make all
 make install
 
+cp /usr/lib/postgresql/9.4/bin/pg_config /usr/bin/pg_config
+
 cd /usr/src
 wget https://github.com/2ndQuadrant/bdr/archive/refs/tags/bdr-plugin/1.0.7.tar.gz
 tar -zxvf 1.0.7.tar.gz
