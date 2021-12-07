@@ -51,6 +51,8 @@ cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/private/ssl-cert-snakeoil-pos
 chown postgres:postgres /etc/ssl/private/ssl-cert-snakeoil-postgres.key
 chmod 600 /etc/ssl/private/ssl-cert-snakeoil-postgres.key
 
+cd "$(dirname "$0")"
+
 cp "$(dirname $0)/postgresql/source/postgresql.service" /usr//lib/systemd/system/postgresql.service
 cp "$(dirname $0)/postgresql/source/postgresql@.service" /usr/lib/systemd/system/postgresql@.service
 cp "$(dirname $0)/postgresql/source/postgresql.conf" /etc/postgresql/9.4/main/postgresql.conf
