@@ -17,52 +17,41 @@ password=$(dd if=/dev/urandom bs=1 count=20 2>/dev/null | base64)
 #install message
 echo "Install PostgreSQL and create the database and users\n"
 
+#included in the distribution
+if [ ."$database_repo" = ."system" ]; then
+	apt-get install -y sudo postgresql
+fi
+
 #postgres official repository
+if [ ."$database_repo" = ."official" ]; then
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ $os_codename-pgdg main" > /etc/apt/sources.list.d/postgresql.list
+	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+	apt-get update && apt-get upgrade -y
+	if [ ."$database_host" = ."127.0.0.1" ] || [ ."$database_host" = ."::1" ] ; then
+		if [ ."$database_version" = ."latest" ]; then
+			apt-get install -y sudo postgresql
+		fi
+		if [ ."$database_version" = ."14" ]; then
+			apt-get install -y sudo postgresql-$database_version
+		fi
+		if [ ."$database_version" = ."13" ]; then
+			apt-get install -y sudo postgresql-$database_version
+		fi
+	fi
+fi
 
-echo "deb http://apt.postgresql.org/pub/repos/apt/ $os_codename-pgdg main" > /etc/apt/sources.list.d/postgresql.list
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-apt-get update && apt-get upgrade -y
-#apt-get install -y sudo postgresql-12
-apt-get install -y sudo bison flex libreadline-dev uuid-dev gettext postgresql-common
-DEBIAN_FRONTEND=noninteractive apt install -y postgresql-client-9.4
-
-cd /usr/src
-git clone -b bdr-pg/REL9_4_STABLE https://github.com/2ndQuadrant/bdr.git
-cd bdr
-./configure --build=aarch64-linux-gnu --prefix=/usr --includedir=/usr/include --mandir=/usr/share/man --infodir=/usr/share/info --sysconfdir=/etc --localstatedir=/var --libdir=/usr/lib/aarch64-linux-gnu --libexecdir=/usr/lib/aarch64-linux-gnu --with-openssl  --mandir=/usr/share/postgresql/9.4/man --docdir=/usr/share/doc/postgresql-doc-9.4 --sysconfdir=/etc/postgresql-common --datarootdir=/usr/share/ --datadir=/usr/share/postgresql/9.4 --bindir=/usr/lib/postgresql/9.4/bin --libdir=/usr/lib/aarch64-linux-gnu/ --libexecdir=/usr/lib/postgresql/ --includedir=/usr/include/postgresql/ --enable-nls --enable-integer-datetimes --enable-thread-safety --enable-tap-tests --disable-rpath --with-uuid=e2fs --with-gnu-ld --with-pgport=5432
-make all
-make install
-cd contrib
-make all
-make install
-
-cp /usr/lib/postgresql/9.4/bin/pg_config /usr/bin/pg_config
-
-cd /usr/src
-wget https://github.com/2ndQuadrant/bdr/archive/refs/tags/bdr-plugin/1.0.7.tar.gz
-tar -zxvf 1.0.7.tar.gz
-cd bdr-bdr-plugin-1.0.7/
-./configure
-make all
-make install
-
-pg_createcluster -d /var/lib/postgresql/9.4/main 9.4 main
-
-cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/private/ssl-cert-snakeoil-postgres.key
-chown postgres:postgres /etc/ssl/private/ssl-cert-snakeoil-postgres.key
-chmod 600 /etc/ssl/private/ssl-cert-snakeoil-postgres.key
-
-cd "$(dirname "$0")"
-
-cp /usr/src/fusionpbx-install.sh/ubuntu/resources/postgresql/source/postgresql.service /usr//lib/systemd/system/postgresql.service
-cp /usr/src/fusionpbx-install.sh/ubuntu/resources/postgresql/source/postgresql@.service /usr/lib/systemd/system/postgresql@.service
-cp /usr/src/fusionpbx-install.sh/ubuntu/resources/postgresql/source/postgresql.conf /etc/postgresql/9.4/main/postgresql.conf
-
-systemctl daemon-reload
-
-systemctl enable postgresql.service
-systemctl enable postgresql@9.4-main.service
-
+#add PostgreSQL and 2ndquadrant repos
+if [ ."$database_repo" = ."2ndquadrant" ]; then
+	if [ ."$database_host" = ."127.0.0.1" ] || [ ."$database_host" = ."::1" ] ; then
+		apt install -y curl
+		curl https://dl.2ndquadrant.com/default/release/get/deb | bash
+		if [ ."$os_codename" = ."focal" ]; then
+			sed -i /etc/apt/sources.list.d/2ndquadrant-dl-default-release.list -e 's#focal#bionic#g'
+		fi
+		apt update
+		apt-get install -y sudo postgresql-bdr-9.4 postgresql-bdr-9.4-bdr-plugin postgresql-bdr-contrib-9.4	
+	fi
+fi
 
 #add additional dependencies
 apt install -y libpq-dev
