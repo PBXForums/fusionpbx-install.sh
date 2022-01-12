@@ -9,8 +9,11 @@ system_branch=master            # master, stable
 switch_branch=stable            # master, stable
 switch_source=false             # true or false
 switch_package=true             # true or false
-switch_version=1.10.3           # only for source
+switch_version=1.10.7           # only for source
 switch_tls=true                 # true or false
+
+# Sofia-Sip Settings
+sofia_version=1.13.6            # release-version for sofia-sip to use
 
 # Database Settings
 database_password=random        # random or a custom value (safe characters A-Z, a-z, 0-9)
